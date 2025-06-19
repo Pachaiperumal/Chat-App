@@ -10,13 +10,13 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // ✅ Check file type
+    // ✅ Validate image type
     if (!file.type.startsWith("image/")) {
       alert("Please upload a valid image file.");
       return;
     }
 
-    // ✅ Check file size (max 16MB)
+    // ✅ Validate image size (max 16MB)
     const maxSizeMB = 16;
     if (file.size > maxSizeMB * 1024 * 1024) {
       alert(`Image must be smaller than ${maxSizeMB}MB.`);
@@ -33,18 +33,18 @@ const ProfilePage = () => {
         return;
       }
 
-      setSelectedImg(base64Image); // Show preview immediately
+      setSelectedImg(base64Image); // show preview
 
       try {
         await updateProfile({ profilePic: base64Image });
-      } catch (err) {
-        console.error("Upload error:", err);
-        alert("There was a problem uploading your image.");
+      } catch (error) {
+        console.error("Image upload error:", error);
+        alert("There was a problem uploading the image. Please try again.");
       }
     };
 
     reader.onerror = () => {
-      alert("Error reading the image file.");
+      alert("Error reading the file.");
     };
 
     reader.readAsDataURL(file);
@@ -60,22 +60,23 @@ const ProfilePage = () => {
             <p className="mt-2">Your profile information</p>
           </div>
 
-          {/* Avatar Upload */}
+          {/* Avatar upload */}
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={selectedImg || authUser?.profilePic || "/user.jpg"}
-                onError={(e) => (e.currentTarget.src = "/user.jpg")}
-                alt="User Profile"
+                src={selectedImg || authUser?.profilePic || "/avatar.png"}
+                onError={(e) => (e.target.src = "/avatar.png")}
+                alt={`${authUser?.fullName || "User"}'s profile`}
                 className="size-32 rounded-full object-cover border-4"
               />
               <label
                 htmlFor="avatar-upload"
                 className={`absolute bottom-0 right-0 
                   bg-base-content hover:scale-105
-                  p-2 rounded-full cursor-pointer transition-all duration-200
+                  p-2 rounded-full cursor-pointer 
+                  transition-all duration-200
                   ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}`}
-                aria-label="Upload profile photo"
+                aria-label="Upload profile image"
               >
                 <Camera className="w-5 h-5 text-base-200" />
                 <input
