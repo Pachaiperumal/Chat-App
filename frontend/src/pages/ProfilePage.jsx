@@ -17,7 +17,7 @@ const ProfilePage = () => {
     }
 
     // Validate file size (e.g., max 2MB)
-    const maxSizeMB = 2;
+    const maxSizeMB = 100;
     if (file.size > maxSizeMB * 1024 * 1024) {
       alert(`Image must be smaller than ${maxSizeMB}MB.`);
       return;
