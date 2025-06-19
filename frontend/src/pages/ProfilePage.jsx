@@ -10,14 +10,14 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validate file type
+    // ✅ Validate file type
     if (!file.type.startsWith("image/")) {
       alert("Please upload a valid image file.");
       return;
     }
 
-    // Validate file size (e.g., max 2MB)
-    const maxSizeMB = 100;
+    // ✅ Validate file size (max 16MB)
+    const maxSizeMB = 16;
     if (file.size > maxSizeMB * 1024 * 1024) {
       alert(`Image must be smaller than ${maxSizeMB}MB.`);
       return;
@@ -28,22 +28,22 @@ const ProfilePage = () => {
     reader.onload = async () => {
       const base64Image = reader.result;
       if (!base64Image) {
-        alert("Failed to read the image file.");
+        alert("Failed to read image.");
         return;
       }
 
-      setSelectedImg(base64Image); // Show image preview immediately
+      setSelectedImg(base64Image); // Show preview
 
       try {
         await updateProfile({ profilePic: base64Image });
       } catch (error) {
-        console.error("Error uploading image:", error);
-        alert("There was a problem uploading your image. Please try again.");
+        console.error("Image upload error:", error);
+        alert("There was a problem uploading the image. Please try again.");
       }
     };
 
     reader.onerror = () => {
-      alert("Error reading the image file.");
+      alert("Error reading the file.");
     };
 
     reader.readAsDataURL(file);
@@ -59,12 +59,12 @@ const ProfilePage = () => {
             <p className="mt-2">Your profile information</p>
           </div>
 
-          {/* Avatar upload */}
+          {/* Avatar Upload */}
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={selectedImg || authUser?.profilePic || "/avatar.png"}
-                onError={(e) => (e.target.src = "/avatar.png")}
+                src={selectedImg || authUser?.profilePic || "/user.jpg"}
+                onError={(e) => (e.currentTarget.src = "/user.jpg")}
                 alt={`${authUser?.fullName || "User"}'s profile`}
                 className="size-32 rounded-full object-cover border-4"
               />
@@ -75,7 +75,7 @@ const ProfilePage = () => {
                   p-2 rounded-full cursor-pointer 
                   transition-all duration-200
                   ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}`}
-                aria-label="Upload new profile image"
+                aria-label="Upload profile image"
               >
                 <Camera className="w-5 h-5 text-base-200" />
                 <input
@@ -91,6 +91,16 @@ const ProfilePage = () => {
             <p className="text-sm text-zinc-400">
               {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
             </p>
+          </div>
+
+          {/* 🔽 Explicit fallback example you requested */}
+          <div className="text-center">
+            <p className="text-sm text-zinc-400">Default Profile Picture:</p>
+            <img
+              src="/user.jpg"
+              alt="Default user"
+              className="mx-auto mt-2 w-20 h-20 rounded-full border"
+            />
           </div>
 
           {/* User Info */}
