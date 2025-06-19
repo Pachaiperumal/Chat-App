@@ -10,16 +10,16 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validate file type
+    // ✅ Check file type
     if (!file.type.startsWith("image/")) {
       alert("Please upload a valid image file.");
       return;
     }
 
-    // Validate file size (max 16MB)
+    // ✅ Check file size (max 16MB)
     const maxSizeMB = 16;
     if (file.size > maxSizeMB * 1024 * 1024) {
-      alert(Image must be smaller than ${maxSizeMB}MB.);
+      alert(`Image must be smaller than ${maxSizeMB}MB.`);
       return;
     }
 
@@ -33,18 +33,18 @@ const ProfilePage = () => {
         return;
       }
 
-      setSelectedImg(base64Image);
+      setSelectedImg(base64Image); // Show preview immediately
 
       try {
         await updateProfile({ profilePic: base64Image });
-      } catch (error) {
-        console.error("Image upload error:", error);
-        alert("There was a problem uploading the image. Please try again.");
+      } catch (err) {
+        console.error("Upload error:", err);
+        alert("There was a problem uploading your image.");
       }
     };
 
     reader.onerror = () => {
-      alert("Error reading the file.");
+      alert("Error reading the image file.");
     };
 
     reader.readAsDataURL(file);
@@ -64,19 +64,18 @@ const ProfilePage = () => {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={selectedImg || authUser?.profilePic || "/user.jpg"} // <- Fallback image
-                onError={(e) => (e.target.src = "/user.jpg")}
-                alt={${authUser?.fullName || "User"}'s profile}
+                src={selectedImg || authUser?.profilePic || "/user.jpg"}
+                onError={(e) => (e.currentTarget.src = "/user.jpg")}
+                alt="User Profile"
                 className="size-32 rounded-full object-cover border-4"
               />
               <label
                 htmlFor="avatar-upload"
-                className={absolute bottom-0 right-0 
+                className={`absolute bottom-0 right-0 
                   bg-base-content hover:scale-105
-                  p-2 rounded-full cursor-pointer 
-                  transition-all duration-200
-                  ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}}
-                aria-label="Upload profile image"
+                  p-2 rounded-full cursor-pointer transition-all duration-200
+                  ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}`}
+                aria-label="Upload profile photo"
               >
                 <Camera className="w-5 h-5 text-base-200" />
                 <input
@@ -143,4 +142,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;  
+export default ProfilePage;
