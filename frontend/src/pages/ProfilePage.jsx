@@ -56,22 +56,29 @@ const ProfilePage = () => {
         <div className="bg-base-300 rounded-xl p-6 space-y-8">
           {/* Header */}
           <div className="text-center">
-            <h1 className="text-2xl font-semibold"> Profile</h1>
+            <h1 className="text-2xl font-semibold">Profile</h1>
             <p className="mt-2">Your profile information</p>
           </div>
 
-          {/* Avatar upload */}
+          {/* Avatar Upload */}
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
-              <img
-                src={selectedImg || authUser?.profilePic || "/avatar.png"}
-                onError={(e) => (e.target.src = "/avatar.png")}
-                alt={`${authUser?.fullName || "User"}'s profile`}
-                className="size-32 rounded-full object-cover border-4"
-              />
+              {selectedImg || authUser?.profilePic ? (
+                <img
+                  src={selectedImg || authUser?.profilePic}
+                  onError={(e) => (e.currentTarget.src = "/avatar.png")}
+                  alt={`${authUser?.fullName || "User"}'s profile`}
+                  className="size-32 rounded-full object-cover border-4"
+                />
+              ) : (
+                <div className="size-32 rounded-full border-4 bg-base-200 flex items-center justify-center">
+                  <User className="w-12 h-12 text-zinc-400" />
+                </div>
+              )}
+
               <label
                 htmlFor="avatar-upload"
-                className={`absolute bottom-0 right-0 
+                className={`absolute bottom-0 right-0
                   bg-base-content hover:scale-105
                   p-2 rounded-full cursor-pointer 
                   transition-all duration-200
@@ -90,7 +97,9 @@ const ProfilePage = () => {
               </label>
             </div>
             <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+              {isUpdatingProfile
+                ? "Uploading..."
+                : "Click the camera icon to update your photo"}
             </p>
           </div>
 
